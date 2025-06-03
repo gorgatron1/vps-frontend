@@ -193,6 +193,7 @@
 	<!-- Interface -->
 	<div class="input-chip-interface {classesInterface}">
 		<!-- Input Field -->
+		 <!-- TODO dkoski pass in function here for paste update value (array of string) -->
 		<form on:submit={addChip}>
 			<input
 				type="text"

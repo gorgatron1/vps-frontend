@@ -3,6 +3,7 @@
 	import { faAdd, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { nanoid } from 'nanoid';
+	import AddButton from './AddButton.svelte';
 
 	export let files: FileUpload[] | undefined;
 	export let title = '???';
@@ -12,12 +13,18 @@
 </script>
 
 <div class="flex flex-col gap-4">
-	<button on:click={() => (open = !open)} class="h3 flex gap-2 items-center"
-		>{title} <span class="opacity-40">{files?.length || 0}</span><Fa
-			icon={open ? faChevronUp : faChevronDown}
-			size="12"
-		/></button
-	>
+	<div class="flex gap-4">
+		<button on:click={() => (open = !open)} class="h3 flex gap-2 items-center"
+			>{title} <span class="opacity-40">{files?.length || 0}</span><Fa
+				icon={open ? faChevronUp : faChevronDown}
+				size="12"
+			/></button
+		>
+
+		{#if !open}
+		<AddButton bind:files={files} bind:title={title} bind:open={open} />
+		{/if}
+	</div>
 
 	{#if open}
 		{#if files?.length}
@@ -33,18 +40,6 @@
 			{/each}
 		{/if}
 
-		<button
-			class="btn variant-ghost-tertiary self-end flex gap-4"
-			on:click={() => {
-				if (!files) files = [];
-				//@ts-ignore
-				files.push({
-					id: nanoid(10),
-					createdAt: new Date().getTime(),
-					updatedAt: new Date().getTime()
-				});
-				files = files;
-			}}><Fa icon={faAdd} /> Add new {title}</button
-		>
+		<AddButton bind:files={files} bind:title={title} />
 	{/if}
 </div>

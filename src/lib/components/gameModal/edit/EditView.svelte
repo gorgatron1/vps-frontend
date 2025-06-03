@@ -7,6 +7,7 @@
 	import Tutorials from './Tutorials.svelte';
 	import B2s from './B2s.svelte';
 	import File from './File.svelte';
+	import Rom from './Rom.svelte';
 	import { Edit } from '$lib/stores/EditStore';
 	import { ProgressRadial, getModalStore } from '@skeletonlabs/skeleton';
 	import ColoredRoms from './ColoredRoms.svelte';
@@ -38,7 +39,7 @@
 	<hr class="-mx-2 md:-mx-8" />
 	<FileSection title="Tutorials" bind:files={cache.tutorialFiles} component={Tutorials} />
 	<hr class="-mx-2 md:-mx-8" />
-	<FileSection title="Roms" bind:files={cache.romFiles} component={File} />
+	<FileSection title="Roms" bind:files={cache.romFiles} component={Rom} />
 	<hr class="-mx-2 md:-mx-8" />
 	<FileSection title="PuP Packs" bind:files={cache.pupPackFiles} component={File} />
 	<hr class="-mx-2 md:-mx-8" />

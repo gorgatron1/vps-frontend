@@ -4,6 +4,7 @@
 	import IdTag from '$lib/components/IdTag.svelte';
 	import ImageUpload from '$lib/components/ImageUpload.svelte';
 	import { formatDateDashed } from '$lib/helper/formatDate';
+	import { pasteVersion, pasteFeatures, pasteAuthors } from '$lib/helper/paste';
 	import { Search } from '$lib/stores/SearchStore';
 	import { TableFeatureOptions, type TableFile } from '$lib/types/VPin';
 	import UrlInputs from './URLInputs.svelte';
@@ -74,6 +75,7 @@
 					type="text"
 					title="Version"
 					bind:value={file.version}
+					on:paste={(event) => (file = pasteVersion(file, event))}
 					on:blur={() => (file.updatedAt = new Date().getTime())}
 				/>
 			</label>
@@ -99,6 +101,7 @@
 					type="date"
 					title="Created at"
 					value={formatDateDashed(file.createdAt || '')}
+					on:paste={(event) => (file = pasteVersion(file, event))}
 					on:change={(e) => (file.createdAt = new Date(e.target.value).getTime())}
 				/>
 			</label>

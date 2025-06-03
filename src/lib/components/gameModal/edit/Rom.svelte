@@ -1,0 +1,89 @@
+<script lang="ts">
+	import EditableAutoCompleteChips from '$lib/components/editableInputChip/EditableAutoCompleteChips.svelte';
+	import IdTag from '$lib/components/IdTag.svelte';
+	import { formatDate, formatDateDashed } from '$lib/helper/formatDate';
+	import { Search } from '$lib/stores/SearchStore';
+	import type { FileUpload, RomFile } from '$lib/types/VPin';
+	import UrlInputs from './URLInputs.svelte';
+
+	// for paste support
+	import { DB } from '$lib/stores/DbStore';
+	import { copyRom } from '$lib/types/VPin';
+	// TODO dkoski
+	import { getClipboardText } from '$lib/helper/paste';
+
+	const { author } = Search;
+	export let file: RomFile;
+	export let onDelete = () => {};
+
+	// TODO dkoski: move to paste.ts
+	const pasteRom = (event: ClipboardEvent) => {
+		const id = getClipboardText(event);
+		const rom = id && DB.findRom(id);
+		if (rom) {
+			event.preventDefault();
+			event.stopPropagation();
+			copyRom(rom, file);
+		}
+	};
+</script>
+
+<div class="card -mx-2 px-2 py-4 rounded-none md:rounded-md md:mx-0 md:p-4 flex flex-col gap-8">
+	<div class="flex gap-4 flex-col md:flex-row">
+		<label class="label flex-1">
+			<span>Comment</span>
+			<input
+				class="input"
+				type="text"
+				title="Comment"
+				bind:value={file.comment}
+				on:blur={() => (file.updatedAt = new Date().getTime())}
+			/>
+		</label>
+		<label class="label">
+			<span>Version</span>
+			<input
+				class="input"
+				type="text"
+				title="Version"
+				bind:value={file.version}
+				on:paste={(e) => { pasteRom(e) }}
+				on:blur={() => (file.updatedAt = new Date().getTime())}
+			/>
+		</label>
+
+		<label class="label">
+			<span>Created at</span>
+			<input
+				class="input"
+				type="date"
+				title="Created at"
+				value={formatDateDashed(file.createdAt || '')}
+				on:change={(e) => (file.createdAt = new Date(e.target.value).getTime())}
+			/>
+		</label>
+	</div>
+
+	<div class="label">
+		<span>Authors</span>
+		<EditableAutoCompleteChips
+			bind:value={file.authors}
+			options={$author.options}
+			on:change={(v) => {
+				file.updatedAt = new Date().getTime();
+				file.authors = v.detail;
+			}}
+		/>
+	</div>
+	<UrlInputs
+		bind:urls={file.urls}
+		on:blur={(v) => {
+			file.updatedAt = new Date().getTime();
+			file.urls = v.detail;
+		}}
+	/>
+	<div class="flex gap-4">
+		<button class="btn btn-sm variant-filled-error" on:click={onDelete}>Delete</button>
+		<IdTag id={file.id} />
+	</div>
+</div>

@@ -72,7 +72,7 @@ export interface FileUrl {
 }
 
 export interface TableFile extends FileUpload {
-	tableFormat: 'VPX' | 'VP9' | 'PM5' | 'FX3' | 'FX2' | 'FX' | 'FP' | 'M';
+	tableFormat: 'VPX' | 'VP9' | 'PM5' | 'FX3' | 'FX2' | 'FX' | 'FP' | 'M' | 'PM5' | 'PC';
 	features?: TableFeature[];
 	theme?: string[];
 	comment?: string;
@@ -200,4 +200,18 @@ export const EmptyFile: FileUpload = {
 	id: '',
 	updatedAt: 0,
 	urls: []
+};
+
+// TODO dkoski: here or in paste?
+export const copyFileUpload = (src: FileUpload, dest: FileUpload) => {
+	dest.version = src.version;
+	dest.authors = src.authors.slice();
+	dest.urls = src.urls.slice();
+	dest.updatedAt = src.updatedAt;
+	dest.createdAt = src.createdAt;
+};
+
+export const copyRom = (src: RomFile, dest: RomFile) => {
+	copyFileUpload(src, dest);
+	dest.comment = src.comment;
 };
